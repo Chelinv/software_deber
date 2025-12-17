@@ -22,7 +22,7 @@ class ChartAccountIn(ChartAccountBase):
 class ChartAccountOut(ChartAccountBase):
     """Salida de cuenta."""
 
-    id: int
+    id: str
     saldo: float = Field(default=0.0, examples=[150.75])
 
     class Config:

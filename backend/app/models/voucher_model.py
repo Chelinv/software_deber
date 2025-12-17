@@ -13,8 +13,8 @@ class VoucherBase(BaseModel):
 class VoucherOut(VoucherBase):
     """Salida de comprobante."""
 
-    id: int
-    transaccion_id: int
+    id: str
+    transaccion_id: str
 
     class Config:
         from_attributes = True

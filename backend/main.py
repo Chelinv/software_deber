@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database import client
 from app.controllers import user_controller, auth_controller
+from app.api.endpoints import financial_controller, report_controller
 import logging
 
 # Configurar logging

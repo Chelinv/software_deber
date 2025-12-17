@@ -1,22 +1,37 @@
-# app/repositories/transaction_repository.py
-
+from motor.motor_asyncio import AsyncIOMotorDatabase
+from bson import ObjectId
 
 class TransactionRepository:
-    """Repositorio en memoria para Transacciones."""
-
     def __init__(self):
-        self._data: dict[int, dict] = {}
-        self._seq: int = 1
+        self.collection_name = "transactions"
 
-    def create(self, payload: dict) -> dict:
-        payload = payload.copy()
-        payload["id"] = self._seq
-        self._data[self._seq] = payload
-        self._seq += 1
-        return payload
+    async def create(self, db: AsyncIOMotorDatabase, data: dict) -> dict:
+        result = await db[self.collection_name].insert_one(data)
+        data["id"] = str(result.inserted_id)
+        return data
 
-    def get(self, transaction_id: int) -> dict | None:
-        return self._data.get(transaction_id)
+    async def get(self, db: AsyncIOMotorDatabase, transaction_id: str) -> dict | None:
+        try:
+            oid = ObjectId(transaction_id)
+        except:
+            return None
+        doc = await db[self.collection_name].find_one({"_id": oid})
+        if doc:
+            doc["id"] = str(doc["_id"])
+        return doc
 
-    def list(self) -> list[dict]:
-        return list(self._data.values())
+    async def list(self, db: AsyncIOMotorDatabase) -> list[dict]:
+        docs = []
+        async for doc in db[self.collection_name].find({}):
+            doc["id"] = str(doc["_id"])
+            docs.append(doc)
+        return docs
+
+    async def update(self, db: AsyncIOMotorDatabase, transaction_id: str, data: dict) -> dict | None:
+        try:
+            oid = ObjectId(transaction_id)
+        except:
+            return None
+        
+        await db[self.collection_name].update_one({"_id": oid}, {"$set": data})
+        return await self.get(db, transaction_id)

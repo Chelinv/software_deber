@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class CertificadoAcademicoOut(BaseModel):
     """RF 3.18 - Servicio Web de Certificados Académicos (mínimo evaluable)."""
 
-    estudiante_id: int = Field(..., examples=[101])
+    estudiante_id: str = Field(..., examples=["60d5ecb8b5c9c62b3c1d4e2a"])
     estudiante_nombre: str = Field(..., examples=["Juan Pérez"])
     periodo: str = Field(..., examples=["2025-2"])
     fecha_emision: date = Field(..., examples=["2025-12-04"])
@@ -15,7 +15,7 @@ class CertificadoAcademicoOut(BaseModel):
 
 
 class RegistroAcademicoOut(BaseModel):
-    estudiante_id: int
+    estudiante_id: str
     estudiante_nombre: str
     promedio_general: float = Field(..., examples=[8.75])
     resumen: list[dict] = Field(
@@ -26,7 +26,7 @@ class RegistroAcademicoOut(BaseModel):
 
 
 class HorarioClasesOut(BaseModel):
-    estudiante_id: int
+    estudiante_id: str
     estudiante_nombre: str
     horario: list[dict] = Field(
         ...,

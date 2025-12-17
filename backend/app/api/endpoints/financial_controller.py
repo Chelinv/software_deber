@@ -1,6 +1,7 @@
-# app/api/endpoints/financial_controller.py
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from app.database import get_db
 from app.models.chart_account_model import ChartAccountIn, ChartAccountOut
 from app.models.transaction_model import TransactionIn, TransactionOut
 from app.models.voucher_model import VoucherOut
@@ -15,54 +16,54 @@ financial_service = FinancialService()
 # Plan de cuentas
 # -----------------
 @router.post("/plan-cuentas", response_model=ChartAccountOut, summary="Crear cuenta contable")
-def crear_cuenta(payload: ChartAccountIn):
+async def crear_cuenta(payload: ChartAccountIn, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Crea una nueva cuenta dentro del Plan de Cuentas."""
-    return financial_service.create_account(payload)
+    return await financial_service.create_account(db, payload)
 
 
 @router.get("/plan-cuentas", response_model=list[ChartAccountOut], summary="Listar plan de cuentas")
-def listar_cuentas():
+async def listar_cuentas(db: AsyncIOMotorDatabase = Depends(get_db)):
     """Lista las cuentas contables registradas."""
-    return financial_service.list_accounts()
+    return await financial_service.list_accounts(db)
 
 
 @router.get("/plan-cuentas/{account_id}", response_model=ChartAccountOut, summary="Obtener cuenta contable")
-def obtener_cuenta(account_id: int):
+async def obtener_cuenta(account_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Obtiene el detalle de una cuenta contable."""
-    return financial_service.get_account(account_id)
+    return await financial_service.get_account(db, account_id)
 
 
 # -----------------
 # Transacciones
 # -----------------
 @router.post("/transacciones", response_model=TransactionOut, summary="Registrar transacción")
-def registrar_transaccion(payload: TransactionIn):
+async def registrar_transaccion(payload: TransactionIn, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Registra una transacción y emite su comprobante asociado."""
-    return financial_service.create_transaction(payload)
+    return await financial_service.create_transaction(db, payload)
 
 
 @router.get("/transacciones", response_model=list[TransactionOut], summary="Listar transacciones")
-def listar_transacciones():
+async def listar_transacciones(db: AsyncIOMotorDatabase = Depends(get_db)):
     """Lista las transacciones registradas."""
-    return financial_service.list_transactions()
+    return await financial_service.list_transactions(db)
 
 
 @router.get("/transacciones/{transaction_id}", response_model=TransactionOut, summary="Obtener transacción")
-def obtener_transaccion(transaction_id: int):
+async def obtener_transaccion(transaction_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Obtiene el detalle de una transacción."""
-    return financial_service.get_transaction(transaction_id)
+    return await financial_service.get_transaction(db, transaction_id)
 
 
 # -----------------
 # Comprobantes
 # -----------------
 @router.get("/comprobantes", response_model=list[VoucherOut], summary="Listar comprobantes")
-def listar_comprobantes():
+async def listar_comprobantes(db: AsyncIOMotorDatabase = Depends(get_db)):
     """Lista comprobantes emitidos por transacciones."""
-    return financial_service.list_vouchers()
+    return await financial_service.list_vouchers(db)
 
 
 @router.get("/comprobantes/{voucher_id}", response_model=VoucherOut, summary="Obtener comprobante")
-def obtener_comprobante(voucher_id: int):
+async def obtener_comprobante(voucher_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
     """Obtiene el detalle de un comprobante."""
-    return financial_service.get_voucher(voucher_id)
+    return await financial_service.get_voucher(db, voucher_id)

@@ -1,22 +1,28 @@
-# app/repositories/voucher_repository.py
-
+from motor.motor_asyncio import AsyncIOMotorDatabase
+from bson import ObjectId
 
 class VoucherRepository:
-    """Repositorio en memoria para Comprobantes."""
-
     def __init__(self):
-        self._data: dict[int, dict] = {}
-        self._seq: int = 1
+        self.collection_name = "vouchers"
 
-    def create(self, payload: dict) -> dict:
-        payload = payload.copy()
-        payload["id"] = self._seq
-        self._data[self._seq] = payload
-        self._seq += 1
-        return payload
+    async def create(self, db: AsyncIOMotorDatabase, data: dict) -> dict:
+        result = await db[self.collection_name].insert_one(data)
+        data["id"] = str(result.inserted_id)
+        return data
 
-    def get(self, voucher_id: int) -> dict | None:
-        return self._data.get(voucher_id)
+    async def get(self, db: AsyncIOMotorDatabase, voucher_id: str) -> dict | None:
+        try:
+            oid = ObjectId(voucher_id)
+        except:
+            return None
+        doc = await db[self.collection_name].find_one({"_id": oid})
+        if doc:
+            doc["id"] = str(doc["_id"])
+        return doc
 
-    def list(self) -> list[dict]:
-        return list(self._data.values())
+    async def list(self, db: AsyncIOMotorDatabase) -> list[dict]:
+        docs = []
+        async for doc in db[self.collection_name].find({}):
+            doc["id"] = str(doc["_id"])
+            docs.append(doc)
+        return docs
