@@ -49,6 +49,9 @@ app.include_router(
     prefix="/api/v1/auth",
     tags=["Autenticación"]
 )
+# Finanzas y Reportes (Xavier)
+app.include_router(financial_controller.router, prefix="/api/v1/finanzas", tags=["Finanzas"])
+app.include_router(report_controller.router, prefix="/api/v1/reportes", tags=["Reportes"])
 
 # Ruta raíz
 @app.get("/")
