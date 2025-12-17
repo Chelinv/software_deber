@@ -13,7 +13,7 @@ class UserIn(UserBase):
 
 class UserOut(UserBase):
     """Esquema para la salida (GET/POST Response), no incluye la contraseña."""
-    id: int
+    id: str
 
     class Config:
         # Permite que el modelo se use con objetos ORM (útil más tarde)
