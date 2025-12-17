@@ -5,7 +5,7 @@ from app.models.user_model import UserIn, UserOut
 from app.repositories.user_repository import UsuarioRepository
 from app.services.auth_service import AuthService
 
-router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
+router = APIRouter(tags=["Usuarios"])
 
 repo = UsuarioRepository()
 auth_service = AuthService()

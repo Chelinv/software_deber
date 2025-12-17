@@ -1,6 +1,7 @@
 from datetime import date
 from motor.motor_asyncio import AsyncIOMotorDatabase
-from fastapi import HTTPException
+# from fastapi import HTTPException  # Unused
+
 
 from app.models.report_models import CertificadoAcademicoOut, HorarioClasesOut, RegistroAcademicoOut
 from app.repositories.user_repository import UsuarioRepository
