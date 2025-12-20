@@ -54,6 +54,13 @@ app.include_router(
 app.include_router(financial_controller.router, prefix="/api/v1/finanzas", tags=["Finanzas"])
 app.include_router(report_controller.router, prefix="/api/v1/reportes", tags=["Reportes"])
 
+# 🔹 NUEVO: Rutas de asignaturas y grupos
+app.include_router(
+    asignatura_api.router,
+    prefix="/api/v1/asignaturas",
+    tags=["Asignaturas"]
+)
+
 # Ruta raíz
 @app.get("/")
 def read_root():
