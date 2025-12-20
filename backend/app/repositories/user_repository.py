@@ -3,6 +3,28 @@ from bson import ObjectId
 
 class UsuarioRepository:
 
+    def crear(self, db: Session, usuario: Usuario):
+        db.add(usuario)
+        db.commit()
+        db.refresh(usuario)
+        return usuario
+
+    def obtener_todos(self, db: Session):
+        return db.query(Usuario).all()
+
+    def obtener_por_id(self, db: Session, user_id: int):
+        return db.query(Usuario).filter(Usuario.id == user_id).first()
+
+    def obtener_por_email(self, db: Session, email: str):
+        return db.query(Usuario).filter(Usuario.email == email).first()
+
+    def actualizar(self, db: Session):
+        db.commit()
+
+    def eliminar(self, db: Session, usuario: Usuario):
+        db.delete(usuario)
+        db.commit()
+
     def __init__(self):
         self.collection_name = "usuarios"
 
