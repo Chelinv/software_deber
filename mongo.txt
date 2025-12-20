@@ -1,2 +1,3 @@
-
-5pNP7PffKUcTubBb
+cd software_deber/backend
+py -m pip install -r requirements.txt
+py -m uvicorn main:app --reload

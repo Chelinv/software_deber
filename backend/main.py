@@ -4,6 +4,7 @@ from app.database import client
 from app.controllers import user_controller, auth_controller
 from app.api.endpoints import financial_controller, report_controller
 import logging
+import sys
 from app.api.endpoints import asignatura_api
 from app.models import asignatura, grupo
 
@@ -16,15 +17,16 @@ async def lifespan(app: FastAPI):
     # Verificar conexión a MongoDB al iniciar
     try:
         await client.admin.command('ping')
+        print("\n" + "="*60)
+        print("✅  CONEXIÓN A BASE DE DATOS EXITOSA (MongoDB Atlas)")
+        print("="*60 + "\n")
         logger.info("¡Conexión exitosa a MongoDB Atlas!")
-        print("\n" + "="*50)
-        print("✅  CONEXIÓN A BASE DE DATOS EXITOSA")
-        print("="*50 + "\n")
     except Exception as e:
+        print("\n" + "="*60)
+        print("❌  FALLO LA CONEXIÓN A BASE DE DATOS")
+        print(f"Error: {e}")
+        print("="*60 + "\n")
         logger.error(f"Error al conectar a MongoDB: {e}")
-        print("\n" + "="*50)
-        print(f"❌  FALLO LA CONEXIÓN A BASE DE DATOS: {e}")
-        print("="*50 + "\n")
     
     yield
     
