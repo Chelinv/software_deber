@@ -4,6 +4,8 @@ from app.database import client
 from app.controllers import user_controller, auth_controller
 from app.api.endpoints import financial_controller, report_controller
 import logging
+from app.api.endpoints import asignatura_api
+from app.models import asignatura, grupo
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
