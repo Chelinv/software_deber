@@ -1,4 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from sqlalchemy.orm import Session
+from app.models.user_entity import Usuario
 from bson import ObjectId
 
 class UsuarioRepository:
