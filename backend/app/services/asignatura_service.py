@@ -1,15 +1,17 @@
-from sqlalchemy.orm import Session
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.repositories.asignatura_repository import AsignaturaRepository
-from app.models.asignatura import Asignatura
 
 class AsignaturaService:
 
     def __init__(self):
         self.repo = AsignaturaRepository()
 
-    def crear(self, db: Session, nombre: str, codigo: str):
-        asignatura = Asignatura(nombre=nombre, codigo=codigo)
-        return self.repo.crear(db, asignatura)
+    async def crear(self, db: AsyncIOMotorDatabase, nombre: str, codigo: str):
+        asignatura_data = {
+            "nombre": nombre,
+            "codigo": codigo
+        }
+        return await self.repo.crear(db, asignatura_data)
 
-    def listar(self, db: Session):
-        return self.repo.listar(db)
+    async def listar(self, db: AsyncIOMotorDatabase):
+        return await self.repo.listar(db)

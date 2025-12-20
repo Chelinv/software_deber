@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.services.asignatura_service import AsignaturaService
 
 class AsignaturaController:
@@ -6,8 +6,8 @@ class AsignaturaController:
     def __init__(self):
         self.service = AsignaturaService()
 
-    def crear(self, db: Session, nombre: str, codigo: str):
-        return self.service.crear(db, nombre, codigo)
+    async def crear(self, db: AsyncIOMotorDatabase, nombre: str, codigo: str):
+        return await self.service.crear(db, nombre, codigo)
 
-    def listar(self, db: Session):
-        return self.service.listar(db)
+    async def listar(self, db: AsyncIOMotorDatabase):
+        return await self.service.listar(db)

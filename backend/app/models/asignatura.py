@@ -1,9 +1,15 @@
-from sqlalchemy import Column, Integer, String
-from app.database import Base
+from pydantic import BaseModel
+from typing import Optional
 
-class Asignatura(Base):
-    __tablename__ = "asignaturas"
+class AsignaturaBase(BaseModel):
+    nombre: str
+    codigo: str
 
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
-    codigo = Column(String, unique=True, nullable=False)
+class AsignaturaCreate(AsignaturaBase):
+    pass
+
+class AsignaturaOut(AsignaturaBase):
+    id: str
+
+    class Config:
+        from_attributes = True

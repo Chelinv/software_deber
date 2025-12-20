@@ -1,12 +1,17 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from app.database import Base
+from pydantic import BaseModel
+from typing import Optional
 
-class GrupoClase(Base):
-    __tablename__ = "grupos_clase"
+class GrupoBase(BaseModel):
+    nombre: str
+    aula: str
+    asignatura_id: str
+    docente_id: str
 
-    id = Column(Integer, primary_key=True, index=True)
-    nombre = Column(String, nullable=False)
-    aula = Column(String, nullable=False)
+class GrupoCreate(GrupoBase):
+    pass
 
-    asignatura_id = Column(Integer, ForeignKey("asignaturas.id"))
-    docente_id = Column(Integer, ForeignKey("usuarios.id"))
+class GrupoOut(GrupoBase):
+    id: str
+
+    class Config:
+        from_attributes = True
