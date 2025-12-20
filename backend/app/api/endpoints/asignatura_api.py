@@ -7,7 +7,7 @@ from app.models.asignatura import AsignaturaCreate, AsignaturaOut
 from app.models.grupo import GrupoCreate, GrupoOut
 from typing import List
 
-router = APIRouter(prefix="/asignaturas", tags=["Asignaturas"])
+router = APIRouter(tags=["Asignaturas"])
 
 asignatura_controller = AsignaturaController()
 grupo_controller = GrupoController()
