@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.database import client
 from app.controllers import user_controller, auth_controller
-from app.api.endpoints import financial_controller, report_controller
+from app.api.endpoints import financial_controller, report_controller, matricula_controller, calificaciones_controller
 import logging
 import sys
 from app.api.endpoints import asignatura_api

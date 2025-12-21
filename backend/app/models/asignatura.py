@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field
 
 class AsignaturaBase(BaseModel):
     nombre: str
@@ -8,8 +7,9 @@ class AsignaturaBase(BaseModel):
 class AsignaturaCreate(AsignaturaBase):
     pass
 
-class AsignaturaOut(AsignaturaBase):
-    id: str
+class AsignaturaInDB(AsignaturaBase):
+    id: str = Field(alias="_id")
 
     class Config:
         from_attributes = True
+        populate_by_name = True

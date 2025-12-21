@@ -2,7 +2,6 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.services.asignatura_service import AsignaturaService
 
 class AsignaturaController:
-
     def __init__(self):
         self.service = AsignaturaService()
 

@@ -1,46 +1,56 @@
+from motor.motor_asyncio import AsyncIOMotorDatabase
+from app.models.matricula_model import MatriculaCreate
 from typing import List, Optional
-from app.models.matricula_model import MatriculaBase
+from bson import ObjectId
 
 class MatriculaRepository:
-    def __init__(self, db):
-        self.collection = db["matriculas"]
+    def __init__(self):
+        self.collection_name = "matriculas"
 
-    def get_all_matriculas(self) -> List[MatriculaBase]:
+    async def get_all_matriculas(self, db: AsyncIOMotorDatabase) -> List[dict]:
         """Obtiene todas las matrículas."""
-        docs = self.collection.find()
+        cursor = db[self.collection_name].find()
         matriculas = []
-        for doc in docs:
-            doc['id'] = str(doc.pop('_id'))  # Mapea _id a id como str
-            matriculas.append(MatriculaBase(**doc))
+        async for doc in cursor:
+            doc['id'] = str(doc['_id'])
+            matriculas.append(doc)
         return matriculas
 
-    def get_matricula_by_id(self, matricula_id: str) -> Optional[MatriculaBase]:
+    async def get_matricula_by_id(self, db: AsyncIOMotorDatabase, matricula_id: str) -> Optional[dict]:
         """Obtiene una matrícula por ID."""
-        from bson import ObjectId
-        doc = self.collection.find_one({"_id": ObjectId(matricula_id)})
+        try:
+            oid = ObjectId(matricula_id)
+        except:
+            return None
+        doc = await db[self.collection_name].find_one({"_id": oid})
         if doc:
-            doc['id'] = str(doc.pop('_id'))
-            return MatriculaBase(**doc)
+            doc['id'] = str(doc['_id'])
+            return doc
         return None
 
-    def create_matricula(self, matricula: MatriculaBase) -> MatriculaBase:
+    async def create_matricula(self, db: AsyncIOMotorDatabase, matricula: MatriculaCreate) -> dict:
         """Crea una nueva matrícula."""
-        doc = matricula.dict(exclude={"id"})
-        result = self.collection.insert_one(doc)
-        matricula.id = str(result.inserted_id)
-        return matricula
+        doc = matricula.model_dump()
+        result = await db[self.collection_name].insert_one(doc)
+        return {**doc, "id": str(result.inserted_id)}
 
-    def update_matricula(self, matricula_id: str, updated_matricula: MatriculaBase) -> Optional[MatriculaBase]:
+    async def update_matricula(self, db: AsyncIOMotorDatabase, matricula_id: str, updated_matricula: MatriculaCreate) -> Optional[dict]:
         """Actualiza una matrícula."""
-        from bson import ObjectId
-        doc = updated_matricula.dict(exclude={"id"})
-        result = self.collection.update_one({"_id": ObjectId(matricula_id)}, {"$set": doc})
+        try:
+            oid = ObjectId(matricula_id)
+        except:
+            return None
+        doc = updated_matricula.model_dump()
+        result = await db[self.collection_name].update_one({"_id": oid}, {"$set": doc})
         if result.matched_count > 0:
-            return self.get_matricula_by_id(matricula_id)
+            return await self.get_matricula_by_id(db, matricula_id)
         return None
 
-    def delete_matricula(self, matricula_id: str) -> bool:
+    async def delete_matricula(self, db: AsyncIOMotorDatabase, matricula_id: str) -> bool:
         """Elimina una matrícula por ID."""
-        from bson import ObjectId
-        result = self.collection.delete_one({"_id": ObjectId(matricula_id)})
+        try:
+            oid = ObjectId(matricula_id)
+        except:
+            return False
+        result = await db[self.collection_name].delete_one({"_id": oid})
         return result.deleted_count > 0

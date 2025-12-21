@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field
 
 class GrupoBase(BaseModel):
     nombre: str
@@ -10,8 +9,9 @@ class GrupoBase(BaseModel):
 class GrupoCreate(GrupoBase):
     pass
 
-class GrupoOut(GrupoBase):
-    id: str
-
+class GrupoInDB(GrupoBase):
+    id: str = Field(alias="_id")
+    
     class Config:
         from_attributes = True
+        populate_by_name = True

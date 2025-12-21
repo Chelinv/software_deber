@@ -1,37 +1,36 @@
 from typing import List
-from app.models.calificaciones_model import CalificacionBase, CalificacionOut  
+from motor.motor_asyncio import AsyncIOMotorDatabase
+from app.models.calificaciones_model import CalificacionCreate, CalificacionOut
 from app.repositories.calificaciones_repository import CalificacionesRepository
 
 class CalificacionesService:
-    def __init__(self, db_session):
-        self.repository = CalificacionesRepository(db_session)
+    def __init__(self):
+        self.repository = CalificacionesRepository()
 
-    def create_calificacion(self, calificacion: CalificacionBase) -> CalificacionOut:
+    async def create_calificacion(self, db: AsyncIOMotorDatabase, calificacion: CalificacionCreate) -> CalificacionOut:
         """Lógica de negocio: Valida y crea una calificación."""
-        if calificacion.asignatura_id <= 0 or not (0 <= calificacion.calificacion <= 100):
-            raise ValueError("asignatura_id debe ser positivo y calificación entre 0 y 100")
-        created_calificacion = self.repository.create_calificacion(calificacion)
-        return CalificacionOut.model_validate(created_calificacion)  
+        created_calificacion = await self.repository.create_calificacion(db, calificacion)
+        return CalificacionOut(**created_calificacion)
 
-    def get_all_calificaciones(self) -> List[CalificacionOut]:
+    async def get_all_calificaciones(self, db: AsyncIOMotorDatabase) -> List[CalificacionOut]:
         """Obtiene todas las calificaciones."""
-        calificaciones = self.repository.get_all_calificaciones()
-        return [CalificacionOut.model_validate(calificacion) for calificacion in calificaciones]
+        calificaciones = await self.repository.get_all_calificaciones(db)
+        return [CalificacionOut(**calificacion) for calificacion in calificaciones]
 
-    def get_calificacion_by_id(self, calificacion_id: str) -> CalificacionOut:  
+    async def get_calificacion_by_id(self, db: AsyncIOMotorDatabase, calificacion_id: str) -> CalificacionOut:
         """Obtiene una calificación por ID."""
-        calificacion = self.repository.get_calificacion_by_id(calificacion_id)
+        calificacion = await self.repository.get_calificacion_by_id(db, calificacion_id)
         if not calificacion:
             raise ValueError(f"Calificación con ID {calificacion_id} no encontrada")
-        return CalificacionOut.model_validate(calificacion)
+        return CalificacionOut(**calificacion)
 
-    def update_calificacion(self, calificacion_id: str, updated_calificacion: CalificacionBase) -> CalificacionOut:  
+    async def update_calificacion(self, db: AsyncIOMotorDatabase, calificacion_id: str, updated_calificacion: CalificacionCreate) -> CalificacionOut:
         """Actualiza una calificación."""
-        updated = self.repository.update_calificacion(calificacion_id, updated_calificacion)
+        updated = await self.repository.update_calificacion(db, calificacion_id, updated_calificacion)
         if not updated:
             raise ValueError(f"Calificación con ID {calificacion_id} no encontrada")
-        return CalificacionOut.model_validate(updated)
+        return CalificacionOut(**updated)
 
-    def delete_calificacion(self, calificacion_id: str) -> bool:  
+    async def delete_calificacion(self, db: AsyncIOMotorDatabase, calificacion_id: str) -> bool:
         """Elimina una calificación."""
-        return self.repository.delete_calificacion(calificacion_id)
+        return await self.repository.delete_calificacion(db, calificacion_id)
