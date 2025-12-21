@@ -65,6 +65,10 @@ app.include_router(
     tags=["Asignaturas"]
 )
 
+
+app.include_router(matricula_controller.router, prefix="/api/matriculas", tags=["Matrículas"])
+app.include_router(calificaciones_controller.router, prefix="/api/calificaciones", tags=["Calificaciones"])
+
 # Ruta raíz
 @app.get("/")
 def read_root():
