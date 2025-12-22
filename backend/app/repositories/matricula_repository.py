@@ -32,6 +32,7 @@ class MatriculaRepository:
         """Crea una nueva matrícula."""
         doc = matricula.model_dump()
         result = await db[self.collection_name].insert_one(doc)
+        doc["_id"] = str(result.inserted_id)
         return {**doc, "id": str(result.inserted_id)}
 
     async def update_matricula(self, db: AsyncIOMotorDatabase, matricula_id: str, updated_matricula: MatriculaCreate) -> Optional[dict]:

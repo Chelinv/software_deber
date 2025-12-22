@@ -32,6 +32,7 @@ class CalificacionesRepository:
         """Crea una nueva calificación."""
         doc = calificacion.model_dump()
         result = await db[self.collection_name].insert_one(doc)
+        doc["_id"] = str(result.inserted_id)
         return {**doc, "id": str(result.inserted_id)}
 
     async def update_calificacion(self, db: AsyncIOMotorDatabase, calificacion_id: str, updated_calificacion: CalificacionCreate) -> Optional[dict]:

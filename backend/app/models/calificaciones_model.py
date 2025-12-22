@@ -2,8 +2,8 @@ from pydantic import BaseModel, Field
 
 class CalificacionBase(BaseModel):
     """Esquema base para una calificación (datos comunes para entrada y salida)."""
-    estudiante_id: int
-    asignatura_id: int
+    estudiante_id: str
+    asignatura_id: str
     calificacion: float  # Valor numérico de la calificación
     fecha_evaluacion: str  # Formato YYYY-MM-DD
 

@@ -73,15 +73,15 @@ app.include_router(calificaciones_controller.router, prefix="/api/calificaciones
 @app.get("/")
 def read_root():
     return {
-        "message": (
-            "SGIE Backend funcionando correctamente.\n"
-            "Ve a /docs para la documentación de la API.\n"
-            "Para acceder a la lista de usuarios, ve a http://127.0.0.1:8000/api/v1/usuarios/ \n"
-            "Para acceder a la lista de ususarios logeados, ve a http://127.0.0.1:8000/api/v1/auth \n"
-            "Para acceder a la lista de finanzas, ve a http://127.0.0.1:8000/api/v1/finanzas \n"
-            "Para acceder a la lista de reportes, ve a http://127.0.0.1:8000/api/v1/reportes \n"
-            "Para acceder a la lista de asignaturas, ve a http://127.0.0.1:8000/api/v1/asignaturas \n"
-            "Para acceder a la lista de matrículas, ve a http://127.0.0.1:8000/api/matriculas \n"
-            "Para acceder a la lista de calificaciones, ve a http://127.0.0.1:8000/api/calificaciones \n"
-        )
+        "message": [
+            "SGIE Backend funcionando correctamente.",
+            "Ve a /docs para la documentación de la API.",
+            "Para acceder a la lista de usuarios, ve a http://127.0.0.1:8000/api/v1/usuarios/",
+            "Para acceder a la lista de usuarios logeados, ve a http://127.0.0.1:8000/api/v1/auth",
+            "Para acceder a la lista de finanzas, ve a http://127.0.0.1:8000/api/v1/finanzas",
+            "Para acceder a la lista de reportes, ve a http://127.0.0.1:8000/api/v1/reportes",
+            "Para acceder a la lista de asignaturas, ve a http://127.0.0.1:8000/api/v1/asignaturas",
+            "Para acceder a la lista de matrículas, ve a http://127.0.0.1:8000/api/matriculas",
+            "Para acceder a la lista de calificaciones, ve a http://127.0.0.1:8000/api/calificaciones"
+        ]
     }

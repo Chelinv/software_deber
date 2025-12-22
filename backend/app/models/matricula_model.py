@@ -2,8 +2,8 @@ from pydantic import BaseModel, Field
 
 class MatriculaBase(BaseModel):
     """Esquema base para una matrícula (datos comunes para entrada y salida)."""
-    estudiante_id: int
-    asignatura_id: int
+    estudiante_id: str
+    asignatura_id: str
     fecha_matricula: str  # Formato YYYY-MM-DD
 
 class MatriculaCreate(MatriculaBase):

@@ -8,6 +8,7 @@ class GrupoRepository:
     async def crear(self, db: AsyncIOMotorDatabase, grupo: GrupoCreate):
         grupo_dict = grupo.model_dump()
         result = await db[self.collection_name].insert_one(grupo_dict)
+        grupo_dict["_id"] = str(result.inserted_id)
         return {**grupo_dict, "id": str(result.inserted_id)}
 
     async def listar(self, db: AsyncIOMotorDatabase):

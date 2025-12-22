@@ -4,7 +4,7 @@ from app.database import get_db
 from app.controllers.asignatura_controller import AsignaturaController
 from app.controllers.grupo_controller import GrupoController
 
-router = APIRouter(prefix="/asignaturas", tags=["Asignaturas"])
+router = APIRouter()
 
 asignatura_controller = AsignaturaController()
 grupo_controller = GrupoController()
