@@ -73,5 +73,9 @@ app.include_router(calificaciones_controller.router, prefix="/api/calificaciones
 @app.get("/")
 def read_root():
     return {
-        "message": "SGIE Backend funcionando correctamente. Ve a /docs para la documentación de la API."
+        "message": (
+            "SGIE Backend funcionando correctamente.\n"
+            "Ve a /docs para la documentación de la API.\n"
+            "Para acceder a la lista de usuarios, ve a http://127.0.0.1:8000/api/v1/usuarios/"
+        )
     }
