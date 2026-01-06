@@ -13,6 +13,7 @@ class MatriculaRepository:
         matriculas = []
         async for doc in cursor:
             doc['id'] = str(doc['_id'])
+            doc['_id'] = str(doc['_id'])
             matriculas.append(doc)
         return matriculas
 
@@ -25,6 +26,7 @@ class MatriculaRepository:
         doc = await db[self.collection_name].find_one({"_id": oid})
         if doc:
             doc['id'] = str(doc['_id'])
+            doc['_id'] = str(doc['_id'])
             return doc
         return None
 

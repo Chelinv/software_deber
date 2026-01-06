@@ -16,5 +16,7 @@ class GrupoRepository:
         cursor = db[self.collection_name].find({})
         async for document in cursor:
             document["id"] = str(document["_id"])
+            if "_id" in document:
+                document["_id"] = str(document["_id"])
             grupos.append(document)
         return grupos
