@@ -67,8 +67,8 @@ app.include_router(
 )
 
 
-app.include_router(matricula_controller.router, prefix="/api/matriculas", tags=["Matrículas"])
-app.include_router(calificaciones_controller.router, prefix="/api/calificaciones", tags=["Calificaciones"])
+app.include_router(matricula_controller.router, prefix="/api/v1/matriculas", tags=["Matrículas"])
+app.include_router(calificaciones_controller.router, prefix="/api/v1/calificaciones", tags=["Calificaciones"])
 
 # Ruta raíz
 @app.get("/")

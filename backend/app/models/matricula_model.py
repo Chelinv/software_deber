@@ -12,7 +12,7 @@ class MatriculaCreate(MatriculaBase):
 
 class MatriculaOut(MatriculaBase):
     """Esquema para la salida (GET/POST Response) de una matrícula."""
-    id: str = Field(alias="_id")
+    id: str = Field(validation_alias="_id")
 
     class Config:
         from_attributes = True

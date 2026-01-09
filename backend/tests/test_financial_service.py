@@ -121,3 +121,113 @@ class TestFinancialService(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(HTTPException) as cm:
             await self.service.create_transaction(self.mock_db, payload)
         self.assertEqual(cm.exception.status_code, 400)
+
+    # -----------------
+    # Plan de cuentas tests
+    # -----------------
+    async def test_create_account(self):
+        from app.models.chart_account_model import ChartAccountIn
+        payload = ChartAccountIn(codigo="1", nombre="Activo", tipo="ACTIVO", saldo=0.0)
+        expected = payload.model_dump()
+        expected["id"] = "acc1"
+        
+        future = asyncio.Future()
+        future.set_result(expected)
+        when(self.service.accounts).create(self.mock_db, mockito_any()).thenReturn(future)
+        
+        result = await self.service.create_account(self.mock_db, payload)
+        self.assertEqual(result.id, "acc1")
+
+    async def test_list_accounts(self):
+        acc1 = {"id": "1", "codigo": "1", "nombre": "A", "tipo": "ACTIVO", "saldo": 0.0}
+        future = asyncio.Future()
+        future.set_result([acc1])
+        when(self.service.accounts).list(self.mock_db).thenReturn(future)
+        
+        result = await self.service.list_accounts(self.mock_db)
+        self.assertEqual(len(result), 1)
+
+    async def test_get_account_found(self):
+        acc = {"id": "1", "codigo": "1", "nombre": "A", "tipo": "ACTIVO", "saldo": 0.0}
+        future = asyncio.Future()
+        future.set_result(acc)
+        when(self.service.accounts).get(self.mock_db, "1").thenReturn(future)
+        
+        result = await self.service.get_account(self.mock_db, "1")
+        self.assertEqual(result.id, "1")
+
+    async def test_get_account_not_found(self):
+        future = asyncio.Future()
+        future.set_result(None)
+        when(self.service.accounts).get(self.mock_db, "99").thenReturn(future)
+        
+        with self.assertRaises(HTTPException) as cm:
+            await self.service.get_account(self.mock_db, "99")
+        self.assertEqual(cm.exception.status_code, 404)
+
+    # -----------------
+    # Transacciones tests adicionales
+    # -----------------
+    async def test_list_transactions(self):
+        # Case 1: With comprobante_id
+        t1 = {"id": "t1", "cuenta_id": "c1", "monto": 10.0, "tipo": "DEBITO", "comprobante_id": "v1", "descripcion": "d", "fecha": "2023"}
+        # Case 2: Without comprobante_id
+        t2 = {"id": "t2", "cuenta_id": "c1", "monto": 20.0, "tipo": "CREDITO", "descripcion": "d", "fecha": "2023"}
+        
+        future = asyncio.Future()
+        future.set_result([t1, t2])
+        when(self.service.transactions).list(self.mock_db).thenReturn(future)
+        
+        results = await self.service.list_transactions(self.mock_db)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].comprobante_id, "v1")
+        self.assertEqual(results[1].comprobante_id, "PENDING")
+
+    async def test_get_transaction_found(self):
+        t1 = {"id": "t1", "cuenta_id": "c1", "monto": 10.0, "tipo": "DEBITO", "descripcion": "d", "fecha": "2023"}
+        future = asyncio.Future()
+        future.set_result(t1)
+        when(self.service.transactions).get(self.mock_db, "t1").thenReturn(future)
+        
+        result = await self.service.get_transaction(self.mock_db, "t1")
+        self.assertEqual(result.id, "t1")
+        self.assertEqual(result.comprobante_id, "PENDING")
+
+    async def test_get_transaction_not_found(self):
+        future = asyncio.Future()
+        future.set_result(None)
+        when(self.service.transactions).get(self.mock_db, "t99").thenReturn(future)
+        
+        with self.assertRaises(HTTPException) as cm:
+            await self.service.get_transaction(self.mock_db, "t99")
+        self.assertEqual(cm.exception.status_code, 404)
+
+    # -----------------
+    # Comprobantes tests
+    # -----------------
+    async def test_list_vouchers(self):
+        v1 = {"id": "v1", "fecha_emision": "2023", "concepto": "c", "transaccion_id": "t1"}
+        future = asyncio.Future()
+        future.set_result([v1])
+        when(self.service.vouchers).list(self.mock_db).thenReturn(future)
+        
+        result = await self.service.list_vouchers(self.mock_db)
+        self.assertEqual(len(result), 1)
+
+    async def test_get_voucher_found(self):
+        v1 = {"id": "v1", "fecha_emision": "2023", "concepto": "c", "transaccion_id": "t1"}
+        future = asyncio.Future()
+        future.set_result(v1)
+        when(self.service.vouchers).get(self.mock_db, "v1").thenReturn(future)
+        
+        result = await self.service.get_voucher(self.mock_db, "v1")
+        self.assertEqual(result.id, "v1")
+
+    async def test_get_voucher_not_found(self):
+        future = asyncio.Future()
+        future.set_result(None)
+        when(self.service.vouchers).get(self.mock_db, "v99").thenReturn(future)
+        
+        with self.assertRaises(HTTPException) as cm:
+            await self.service.get_voucher(self.mock_db, "v99")
+        self.assertEqual(cm.exception.status_code, 404)

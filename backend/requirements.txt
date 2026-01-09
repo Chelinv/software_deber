@@ -28,3 +28,4 @@ pytest
 coverage
 mockito
 httpx
+pytest-cov
