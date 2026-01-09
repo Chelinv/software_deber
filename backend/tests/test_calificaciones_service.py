@@ -66,6 +66,40 @@ class TestCalificacionesService(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValueError):
             await self.service.get_calificacion_by_id(self.mock_db, "c99")
 
+    async def test_update_calificacion_success(self):
+        payload = CalificacionCreate(
+            estudiante_id="est1",
+            asignatura_id="asig1",
+            calificacion=9.8,
+            fecha_evaluacion="2023-02-01"
+        )
+        updated_dict = payload.model_dump()
+        updated_dict["id"] = "c1"
+
+        future = asyncio.Future()
+        future.set_result(updated_dict)
+        when(self.service.repository).update_calificacion(self.mock_db, "c1", payload).thenReturn(future)
+
+        result = await self.service.update_calificacion(self.mock_db, "c1", payload)
+        self.assertEqual(result.id, "c1")
+        self.assertEqual(result.calificacion, 9.8)
+        verify(self.service.repository).update_calificacion(self.mock_db, "c1", payload)
+
+    async def test_update_calificacion_not_found(self):
+        payload = CalificacionCreate(
+            estudiante_id="est1",
+            asignatura_id="asig1",
+            calificacion=9.8,
+            fecha_evaluacion="2023-02-01"
+        )
+
+        future = asyncio.Future()
+        future.set_result(None)
+        when(self.service.repository).update_calificacion(self.mock_db, "c404", payload).thenReturn(future)
+
+        with self.assertRaises(ValueError):
+            await self.service.update_calificacion(self.mock_db, "c404", payload)
+
     async def test_delete_calificacion(self):
         future = asyncio.Future()
         future.set_result(True)
