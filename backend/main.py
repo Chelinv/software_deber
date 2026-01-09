@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 from app.database import client
 from app.controllers import user_controller, auth_controller
@@ -72,16 +73,21 @@ app.include_router(calificaciones_controller.router, prefix="/api/calificaciones
 # Ruta raíz
 @app.get("/")
 def read_root():
-    return {
-        "message": [
-            "SGIE Backend funcionando correctamente.",
-            "Ve a /docs para la documentación de la API.",
-            "Para acceder a la lista de usuarios, ve a http://127.0.0.1:8000/api/v1/usuarios/",
-            "Para acceder a la lista de usuarios logeados, ve a http://127.0.0.1:8000/api/v1/auth",
-            "Para acceder a la lista de finanzas, ve a http://127.0.0.1:8000/api/v1/finanzas",
-            "Para acceder a la lista de reportes, ve a http://127.0.0.1:8000/api/v1/reportes",
-            "Para acceder a la lista de asignaturas, ve a http://127.0.0.1:8000/api/v1/asignaturas",
-            "Para acceder a la lista de matrículas, ve a http://127.0.0.1:8000/api/matriculas",
-            "Para acceder a la lista de calificaciones, ve a http://127.0.0.1:8000/api/calificaciones"
-        ]
-    }
+    return RedirectResponse(url="/docs")
+
+#@app.get("/")
+#def read_root():
+#    return {
+#        "message": [
+#            "SGIE Backend funcionando correctamente.",
+#            "Ve a /docs para la documentación de la API.",
+#            "Para acceder a la lista de usuarios, ve a http://127.0.0.1:8000/api/v1/usuarios/",
+#            "Para acceder a la lista de usuarios logeados, ve a http://127.0.0.1:8000/api/v1/auth",
+#            "Para acceder a la lista de finanzas, ve a http://127.0.0.1:8000/api/v1/finanzas",
+#            "Para acceder a la lista de reportes, ve a http://127.0.0.1:8000/api/v1/reportes",
+#            "Para acceder a la lista de asignaturas, ve a http://127.0.0.1:8000/api/v1/asignaturas",
+#            "Para acceder a la lista de matrículas, ve a http://127.0.0.1:8000/api/matriculas",
+#            "Para acceder a la lista de calificaciones, ve a http://127.0.0.1:8000/api/calificaciones"
+#        ]
+#    }
+    
