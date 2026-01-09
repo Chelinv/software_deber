@@ -1,0 +1,10 @@
+[run]
+source = app
+omit = 
+    app/database.py
+    backend/main.py
+    */__init__.py
+
+[report]
+show_missing = True
+skip_empty = True
