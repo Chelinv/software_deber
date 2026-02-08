@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import client
 from app.controllers import user_controller, auth_controller
@@ -19,12 +20,12 @@ async def lifespan(app: FastAPI):
     try:
         await client.admin.command('ping')
         print("\n" + "="*60)
-        print("✅  CONEXIÓN A BASE DE DATOS EXITOSA (MongoDB Atlas)")
+        print("OK  CONEXION A BASE DE DATOS EXITOSA (MongoDB Atlas)")
         print("="*60 + "\n")
-        logger.info("¡Conexión exitosa a MongoDB Atlas!")
+        logger.info("Conexion exitosa a MongoDB Atlas!")
     except Exception as e:
         print("\n" + "="*60)
-        print("❌  FALLO LA CONEXIÓN A BASE DE DATOS")
+        print("X  FALLO LA CONEXION A BASE DE DATOS")
         print(f"Error: {e}")
         print("="*60 + "\n")
         logger.error(f"Error al conectar a MongoDB: {e}")
@@ -40,6 +41,15 @@ app = FastAPI(
     description="Implementación del backend para la Tarea T02.03 utilizando FastAPI.",
     version="1.0.0",
     lifespan=lifespan
+)
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5174", "http://127.0.0.1:5174"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Rutas de usuarios (CRUD)

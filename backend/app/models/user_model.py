@@ -11,6 +11,11 @@ class UserIn(UserBase):
     """Esquema para la entrada (POST/PUT), incluye campos sensibles como la contraseña."""
     password: str
 
+class UserLogin(BaseModel):
+    """Esquema para el login."""
+    email: str
+    password: str
+
 class UserOut(UserBase):
     """Esquema para la salida (GET/POST Response), no incluye la contraseña."""
     id: str
