@@ -83,6 +83,11 @@ app.include_router(calificaciones_controller.router, prefix="/api/v1/calificacio
 from app.api.endpoints import cleanup_api
 app.include_router(cleanup_api.router, prefix="/api/v1/utils", tags=["Utilidades"])
 
+# Relaciones Padre-Hijo
+from app.api.endpoints import relacion_padre_hijo_api
+app.include_router(relacion_padre_hijo_api.router, prefix="/api/v1/relaciones", tags=["Relaciones Padre-Hijo"])
+
+
 # Ruta raíz
 @app.get("/")
 def read_root():

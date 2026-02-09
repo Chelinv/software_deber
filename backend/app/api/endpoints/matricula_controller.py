@@ -15,7 +15,11 @@ async def crear_matricula(matricula: MatriculaCreate, db: AsyncIOMotorDatabase =
     Acepta asignatura_ids (lista) de forma predeterminada.
     """
     try:
-        nuevo_matricula = await matricula_service.create_matricula(db, matricula)
+        # TODO: Obtener current_user del token de autenticación
+        # Por ahora, asumimos que viene en el request
+        current_user = None  # Placeholder - implementar autenticación
+        
+        nuevo_matricula = await matricula_service.create_matricula(db, matricula, current_user)
         return nuevo_matricula
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
