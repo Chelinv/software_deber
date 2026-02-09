@@ -9,9 +9,13 @@ class MatriculaService:
 
     async def create_matricula(self, db: AsyncIOMotorDatabase, matricula: MatriculaCreate) -> MatriculaOut:
         """Lógica de negocio: Valida y crea una matrícula."""
-        # Validación básica (ejemplo)
-        if not matricula.estudiante_id or not matricula.asignatura_id:
-            raise ValueError("estudiante_id y asignatura_id son requeridos")
+        # Validación básica
+        if not matricula.estudiante_id:
+            raise ValueError("estudiante_id es requerido")
+        
+        if not matricula.asignatura_ids or len(matricula.asignatura_ids) == 0:
+            raise ValueError("Debe seleccionar al menos una asignatura")
+        
         created_matricula = await self.repository.create_matricula(db, matricula)
         return MatriculaOut(**created_matricula)
 
