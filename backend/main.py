@@ -79,6 +79,10 @@ app.include_router(
 app.include_router(matricula_controller.router, prefix="/api/v1/matriculas", tags=["Matrículas"])
 app.include_router(calificaciones_controller.router, prefix="/api/v1/calificaciones", tags=["Calificaciones"])
 
+# Utilidades de limpieza
+from app.api.endpoints import cleanup_api
+app.include_router(cleanup_api.router, prefix="/api/v1/utils", tags=["Utilidades"])
+
 # Ruta raíz
 @app.get("/")
 def read_root():

@@ -26,3 +26,31 @@ class AsignaturaRepository:
                 document["_id"] = str(document["_id"])
             asignaturas.append(document)
         return asignaturas
+
+    async def actualizar(self, db: AsyncIOMotorDatabase, asignatura_id: str, asignatura: AsignaturaCreate):
+        from bson import ObjectId
+        
+        asignatura_dict = asignatura.model_dump()
+        result = await db[self.collection_name].update_one(
+            {"_id": ObjectId(asignatura_id)},
+            {"$set": asignatura_dict}
+        )
+        
+        if result.matched_count == 0:
+            raise ValueError(f"Asignatura con ID {asignatura_id} no encontrada")
+        
+        # Obtener el documento actualizado
+        updated_doc = await db[self.collection_name].find_one({"_id": ObjectId(asignatura_id)})
+        updated_doc["id"] = str(updated_doc["_id"])
+        updated_doc["_id"] = str(updated_doc["_id"])
+        return updated_doc
+
+    async def eliminar(self, db: AsyncIOMotorDatabase, asignatura_id: str):
+        from bson import ObjectId
+        
+        result = await db[self.collection_name].delete_one({"_id": ObjectId(asignatura_id)})
+        
+        if result.deleted_count == 0:
+            raise ValueError(f"Asignatura con ID {asignatura_id} no encontrada")
+        
+        return True
