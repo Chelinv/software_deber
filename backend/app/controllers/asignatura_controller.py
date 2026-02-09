@@ -10,3 +10,9 @@ class AsignaturaController:
 
     async def listar(self, db: AsyncIOMotorDatabase):
         return await self.service.listar(db)
+
+    async def actualizar(self, db: AsyncIOMotorDatabase, asignatura_id: str, nombre: str, codigo: str):
+        return await self.service.actualizar(db, asignatura_id, nombre, codigo)
+
+    async def eliminar(self, db: AsyncIOMotorDatabase, asignatura_id: str):
+        return await self.service.eliminar(db, asignatura_id)

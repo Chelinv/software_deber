@@ -19,6 +19,19 @@ async def crear_asignatura(asignatura: AsignaturaCreate, db: AsyncIOMotorDatabas
 async def listar_asignaturas(db: AsyncIOMotorDatabase = Depends(get_db)):
     return await asignatura_controller.listar(db)
 
+@router.put("/{asignatura_id}", response_model=AsignaturaInDB)
+async def actualizar_asignatura(
+    asignatura_id: str,
+    asignatura: AsignaturaCreate,
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    return await asignatura_controller.actualizar(db, asignatura_id, asignatura.nombre, asignatura.codigo)
+
+@router.delete("/{asignatura_id}")
+async def eliminar_asignatura(asignatura_id: str, db: AsyncIOMotorDatabase = Depends(get_db)):
+    await asignatura_controller.eliminar(db, asignatura_id)
+    return {"message": "Asignatura eliminada exitosamente"}
+
 @router.post("/grupos", response_model=GrupoInDB)
 async def crear_grupo(grupo: GrupoCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     return await grupo_controller.crear(
