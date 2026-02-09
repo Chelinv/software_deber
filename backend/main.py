@@ -84,6 +84,11 @@ app.include_router(calificaciones_controller.router, prefix="/api/v1/calificacio
 from app.api.endpoints import cleanup_api
 app.include_router(cleanup_api.router, prefix="/api/v1/utils", tags=["Utilidades"])
 
+# Dashboard de Estudiante
+from app.api.endpoints import estudiante_dashboard_api
+app.include_router(estudiante_dashboard_api.router, prefix="/api/v1", tags=["Dashboard Estudiante"])
+
+
 
 
 
