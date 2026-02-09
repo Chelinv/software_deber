@@ -20,12 +20,12 @@ async def lifespan(app: FastAPI):
     try:
         await client.admin.command('ping')
         print("\n" + "="*60)
-        print("OK  CONEXION A BASE DE DATOS EXITOSA (MongoDB Atlas)")
+        print("✅  CONEXIÓN A BASE DE DATOS EXITOSA (MongoDB Atlas)")
         print("="*60 + "\n")
-        logger.info("Conexion exitosa a MongoDB Atlas!")
+        logger.info("¡Conexión exitosa a MongoDB Atlas!")
     except Exception as e:
         print("\n" + "="*60)
-        print("X  FALLO LA CONEXION A BASE DE DATOS")
+        print("❌  FALLO LA CONEXIÓN A BASE DE DATOS")
         print(f"Error: {e}")
         print("="*60 + "\n")
         logger.error(f"Error al conectar a MongoDB: {e}")
@@ -42,16 +42,10 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan
 )
-
-# Configurar CORS
+# Habilitar CORS para desarrollo local (ajustar en producción)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", 
-        "http://localhost:5174", 
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174"
-    ],
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:8000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

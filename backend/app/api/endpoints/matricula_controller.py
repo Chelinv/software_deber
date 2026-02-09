@@ -12,6 +12,7 @@ matricula_service = MatriculaService()  # Instancia del servicio
 async def crear_matricula(matricula: MatriculaCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
     """
     Crea una nueva matrícula en el sistema.
+    Acepta asignatura_ids (lista) de forma predeterminada.
     """
     try:
         nuevo_matricula = await matricula_service.create_matricula(db, matricula)
