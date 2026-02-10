@@ -55,6 +55,12 @@ async def actualizar_usuario(user_id: str, usuario: UsuarioUpdate, db: AsyncIOMo
         if not update_data:
             raise HTTPException(status_code=400, detail="No hay datos para actualizar")
         
+        # Si se está actualizando la contraseña, hashearla
+        if "password" in update_data and update_data["password"]:
+            from app.services.auth_service import AuthService
+            auth_service = AuthService()
+            update_data["password"] = auth_service.hash_password(update_data["password"])
+        
         # Actualizar usando el repositorio
         usuario_actualizado = await usuario_repo.actualizar(db, user_id, update_data)
         
