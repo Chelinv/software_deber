@@ -58,8 +58,8 @@ async def get_student_dashboard(
                         total_calificacion += calificacion
                         materias_con_nota += 1
                         
-                        # Determinar estado (asumiendo que 60 es la nota mínima para aprobar)
-                        if calificacion >= 60:
+                        # Determinar estado (nota mínima para aprobar: 7.0 en escala 0-10)
+                        if calificacion >= 7.0:
                             estado = "Aprobado"
                             materias_aprobadas += 1
                         else:

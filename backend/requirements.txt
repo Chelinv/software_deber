@@ -29,3 +29,4 @@ coverage
 mockito
 httpx
 pytest-cov
+reportlab
